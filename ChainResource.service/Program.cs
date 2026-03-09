@@ -29,11 +29,7 @@ builder.Services.Configure<FileSystemConfiguration>(builder.Configuration.GetSec
 builder.Services.Configure<MemoryConfiguration>(builder.Configuration.GetSection(MemoryConfiguration.ConfigName));
 builder.Services.Configure<WebServiceConfiguration>(builder.Configuration.GetSection(WebServiceConfiguration.ConfigName));
 builder.Services.AddMemoryCache();
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-    });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
