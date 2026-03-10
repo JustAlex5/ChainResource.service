@@ -46,8 +46,9 @@ public class MemoryDal<T> :IStorageDal<T>
     {
         if ( _memoryCache.TryGetValue(key, out T? value))
         {
-            return Task.FromResult(value);
+            return Task.FromResult<T>(value);
         }
-        return default;
+        return Task.FromResult<T?>(default);
+        
     }
 }
