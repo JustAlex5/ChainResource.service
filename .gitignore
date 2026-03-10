@@ -38,3 +38,6 @@ Thumbs.db
 appsettings.Development.json
 appsettings.Local.json
 
+## Other
+**/cache
+
