@@ -34,18 +34,19 @@ public class MemoryDal<T> :IStorageDal<T>
         await SetCache(value);
     }
     
-    private async Task SetCache(T value)
+    private Task SetCache(T value)
     {
         var cacheEntryOptions = new MemoryCacheEntryOptions()
             .SetAbsoluteExpiration(TimeSpan.FromSeconds(_memoryConfiguration.TTL));
          _memoryCache.Set(typeof(T).FullName, value, cacheEntryOptions);
+            return Task.CompletedTask;
     }
 
-    private async Task<T?> GetCache(string key)
+    private Task<T?> GetCache(string key)
     {
         if ( _memoryCache.TryGetValue(key, out T? value))
         {
-            return value;
+            return Task.FromResult(value);
         }
         return default;
     }
