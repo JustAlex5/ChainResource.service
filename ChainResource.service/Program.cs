@@ -4,6 +4,7 @@ using ChainResource.service.Configuration;
 using ChainResource.service.DAL;
 using ChainResource.service.DAL.Interfaces;
 using ChainResource.service.Model;
+using ChainResource.service.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddSingleton<IStorageFactory<ExchangeRateList>, StorageFactory<
 
 builder.Services.AddSingleton<IChainResource<ExchangeRateList>, ChainResource<ExchangeRateList>>();
 
+builder.Services.AddSingleton(typeof(ILocalCache<,>), typeof(DictionaryCache<,>));
 builder.Services.AddHttpClient();
 //Configuyrations
 
