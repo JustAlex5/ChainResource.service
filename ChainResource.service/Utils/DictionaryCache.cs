@@ -36,16 +36,13 @@ public class DictionaryCache<TKey,TValue>: ILocalCache <TKey,TValue> where TKey 
 
         if (cachedValue != null && cachedValue.IsExpired)
         {
-            Remove<T>(key);
+            _cache.TryRemove(new KeyValuePair<TKey, TtlValue<TValue>>(key, cachedValue));
         }
         value = default!;
         return false;
     }
 
-    private void Remove<T>(TKey key)
-    {
-        _cache.TryRemove(key, out _);
-    }
+
     // This function CleaAll() Is can be useful api such ass api/ClearCache
     public void ClearAll() =>      _cache.Clear();
 
