@@ -1,0 +1,45 @@
+﻿[config]
+model = "claude-sonnet-4"  # best model available on Qodo
+
+[pr_reviewer]
+extra_instructions = """
+This is a C# .NET 8 project.
+Focus on:
+- Async/await correctness and deadlock risks
+- DI registration and lifetime issues (singleton vs scoped)
+- Thread safety (ConcurrentDictionary usage, shared state)
+- Null safety and proper use of nullable reference types
+- EF Core query patterns
+"""
+enable_review_labels_security = true   # labels PR if security issue found
+enable_review_labels_effort = true     # labels PR with effort estimate 1-5
+
+[pr_code_suggestions]
+num_code_suggestions = 5
+focus_only_on_problems = false         # also suggest improvements, not just bugs
+
+[pr_description]
+publish_labels = true
+generate_ai_title = true               # auto-generates a clean PR title
+
+[github_app]
+pr_commands = [
+    "/describe",
+    "/review",
+    "/improve"
+]
+```
+
+**PR description to use:**
+```
+## CI/CD Infrastructure Setup
+
+### Changes
+- Add CI workflow (build, test, coverage) on push and PR
+- Add Qodo PR Agent workflow for slash command support  
+- Add `.pr_agent.toml` to configure AI review for C# .NET 8 patterns
+
+### Notes
+- Qodo GitHub App already installed, this PR adds config + optional Actions support
+- Coverage reports uploaded as artifacts on every run
+- No secrets required beyond auto-created GITHUB_TOKEN
