@@ -2,30 +2,49 @@ name: CI Workflow
 
 on:
   push:
-    branches:
-      - main
+    branches: [main, develop]
   pull_request:
-    branches:
-      - main
+    types: [opened, synchronize, reopened]
+    branches: [main, develop]
 
 jobs:
-  build:
+  build-and-test:
+    name: Build & Test (.NET 8)
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0' # Change if you're using a different .NET version
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
 
-    - name: Build
-      run: dotnet build --configuration Release --no-restore
+      - name: Restore dependencies
+        run: dotnet restore
 
-    - name: Run tests
-      run: dotnet test --no-build --verbosity normal
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run tests with coverage
+        run: dotnet test --no-build --configuration Release
+          --verbosity normal
+          --collect:"XPlat Code Coverage"
+          --results-directory ./coverage
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: ./coverage
+          retention-days: 7
